@@ -1,0 +1,7 @@
+"Organism","Trial","panel","pcnm_mode","n_tested","n_sig_fdr05","prop_sig_fdr05","median_delta_r2m","median_delta_AIC","median_delta_BIC"
+"Bacteria","SpringPan","Bac_Spring","full",4,4,1,0.146319918087155,111.132046032855,-37.3923970204221
+"Bacteria","SpringPan","Bac_Spring","top10",4,4,1,0.0898228575399391,84.2263374443183,34.7181897598924
+"Fungi","SpringPan","Fun_Spring","full",5,5,1,0.200433672798624,219.820546762008,45.8121455966052
+"Fungi","SpringPan","Fun_Spring","top10",5,5,1,0.105583142271008,131.152942990559,81.436256943301
+"Fungi","WinterPan","Fun_Winter","full",4,4,1,0.329708364596758,340.100391102903,60.5944854241152
+"Fungi","WinterPan","Fun_Winter","top10",4,4,1,0.226239343968265,269.882969890246,219.971201019034

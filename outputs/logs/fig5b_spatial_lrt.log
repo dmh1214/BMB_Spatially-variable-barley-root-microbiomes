@@ -1,0 +1,165 @@
+There were 14 warnings (use warnings() to see them)
+Warning messages:
+1: In readRDS(file.path(project_root, "data/processed/bacteria/meta_spring.rds")) :
+  strings not representable in native encoding will be translated to UTF-8
+2: In readRDS(file.path(project_root, "data/processed/bacteria/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+3: In readRDS(file.path(project_root, "data/processed/bacteria/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+4: In readRDS(file.path(project_root, "data/processed/bacteria/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+5: In readRDS(file.path(project_root, "data/processed/bacteria/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+6: In readRDS(file.path(project_root, "data/processed/bacteria/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+Warning messages:
+1: In readRDS(file.path(project_root, "data/processed/bacteria/meta_winter.rds")) :
+  strings not representable in native encoding will be translated to UTF-8
+2: In readRDS(file.path(project_root, "data/processed/bacteria/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+3: In readRDS(file.path(project_root, "data/processed/bacteria/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+4: In readRDS(file.path(project_root, "data/processed/bacteria/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+5: In readRDS(file.path(project_root, "data/processed/bacteria/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+6: In readRDS(file.path(project_root, "data/processed/bacteria/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+7: In readRDS(file.path(project_root, "data/processed/bacteria/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+Warning messages:
+1: In readRDS(file.path(project_root, "data/processed/fungi/meta_spring.rds")) :
+  strings not representable in native encoding will be translated to UTF-8
+2: In readRDS(file.path(project_root, "data/processed/fungi/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+3: In readRDS(file.path(project_root, "data/processed/fungi/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+4: In readRDS(file.path(project_root, "data/processed/fungi/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+5: In readRDS(file.path(project_root, "data/processed/fungi/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+6: In readRDS(file.path(project_root, "data/processed/fungi/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+7: In readRDS(file.path(project_root, "data/processed/fungi/meta_spring.rds")) :
+  input string 'M104/PFC 88210//DO<d1>A JOSEFA' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+Warning messages:
+1: In readRDS(file.path(project_root, "data/processed/fungi/meta_winter.rds")) :
+  strings not representable in native encoding will be translated to UTF-8
+2: In readRDS(file.path(project_root, "data/processed/fungi/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+3: In readRDS(file.path(project_root, "data/processed/fungi/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+4: In readRDS(file.path(project_root, "data/processed/fungi/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+5: In readRDS(file.path(project_root, "data/processed/fungi/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+6: In readRDS(file.path(project_root, "data/processed/fungi/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+7: In readRDS(file.path(project_root, "data/processed/fungi/meta_winter.rds")) :
+  input string 'BA?G<dc>L' cannot be translated to UTF-8, is it valid in 'UTF-8'?
+   Biomarker Organism     Trial
+1   ASV16927 Bacteria SpringPan
+2  ASV137553 Bacteria SpringPan
+3   ASV68333 Bacteria SpringPan
+4    OTU_739    Fungi SpringPan
+5   OTU_3662    Fungi SpringPan
+6   OTU_3978    Fungi SpringPan
+7   OTU_4625    Fungi SpringPan
+8   OTU_3665    Fungi SpringPan
+9   OTU_2962    Fungi WinterPan
+10  OTU_1241    Fungi WinterPan
+11   OTU_773    Fungi WinterPan
+12  OTU_2720    Fungi WinterPan
+13  ASV26933 Bacteria SpringPan
+# A tibble: 4 x 4
+  panel      Organism Trial     n_positive_biomarkers_in_matrix
+  <chr>      <chr>    <chr>                               <int>
+1 Bac_Spring Bacteria SpringPan                               4
+2 Bac_Winter Bacteria WinterPan                               0
+3 Fun_Spring Fungi    SpringPan                               5
+4 Fun_Winter Fungi    WinterPan                               4
+
+========== Running Bac_Spring (FULL) ==========
+
+========== Running Bac_Spring (TOP10) ==========
+
+========== Running Bac_Winter (FULL) ==========
+
+========== Running Bac_Winter (TOP10) ==========
+
+========== Running Fun_Spring (FULL) ==========
+
+========== Running Fun_Spring (TOP10) ==========
+
+========== Running Fun_Winter (FULL) ==========
+
+========== Running Fun_Winter (TOP10) ==========
+Warning messages:
+1: In run_panel(panel_name = nm, organism = p$organism, trial = p$trial,  :
+  Bac_Winter [full]: no positive biomarkers found in rCLR matrix.
+2: In run_panel(panel_name = nm, organism = p$organism, trial = p$trial,  :
+  Bac_Winter [top10]: no positive biomarkers found in rCLR matrix.
+# A tibble: 26 x 25
+   Biomarker     n lrt_chisq    p_lrt minus_log10_p_lrt r2m_m0 r2m_m1 delta_r2m
+   <chr>     <int>     <dbl>    <dbl>             <dbl>  <dbl>  <dbl>     <dbl>
+ 1 ASV137553  1044     219.  1.45e-30              29.8      0 0.172     0.172 
+ 2 ASV68333   1044     181.  1.67e-23              22.8      0 0.154     0.154 
+ 3 ASV16927   1044     161.  6.50e-20              19.2      0 0.138     0.138 
+ 4 ASV26933   1044     141.  2.92e-16              15.5      0 0.120     0.120 
+ 5 ASV137553  1044     139.  8.29e-25              24.1      0 0.110     0.110 
+ 6 ASV68333   1044     112.  1.68e-19              18.8      0 0.0976    0.0976
+ 7 ASV16927   1044      96.0 3.49e-16              15.5      0 0.0821    0.0821
+ 8 ASV26933   1044      86.8 2.27e-14              13.6      0 0.0723    0.0723
+ 9 OTU_3978   1066     346.  9.13e-53              52.0      0 0.261     0.261 
+10 OTU_3665   1066     291.  3.52e-42              41.5      0 0.201     0.201 
+# i 16 more rows
+# i 17 more variables: AIC_m0 <dbl>, AIC_m1 <dbl>, delta_AIC <dbl>,
+#   BIC_m0 <dbl>, BIC_m1 <dbl>, delta_BIC <dbl>, status <chr>, panel <chr>,
+#   Organism <chr>, Trial <chr>, pcnm_mode <chr>, pcnm_mode_label <chr>,
+#   n_pcnm_used <dbl>, n_positive_biomarkers_requested <int>, p_adj <dbl>,
+#   sig_fdr05 <lgl>, spatial_impact <chr>
+# A tibble: 6 x 10
+  Organism Trial     panel      pcnm_mode n_tested n_sig_fdr05 prop_sig_fdr05
+  <chr>    <chr>     <chr>      <chr>        <int>       <int>          <dbl>
+1 Bacteria SpringPan Bac_Spring full             4           4              1
+2 Bacteria SpringPan Bac_Spring top10            4           4              1
+3 Fungi    SpringPan Fun_Spring full             5           5              1
+4 Fungi    SpringPan Fun_Spring top10            5           5              1
+5 Fungi    WinterPan Fun_Winter full             4           4              1
+6 Fungi    WinterPan Fun_Winter top10            4           4              1
+# i 3 more variables: median_delta_r2m <dbl>, median_delta_AIC <dbl>,
+#   median_delta_BIC <dbl>
+# A tibble: 26 x 12
+   Organism Trial    panel pcnm_mode Biomarker     n    p_lrt    p_adj delta_r2m
+   <chr>    <chr>    <chr> <chr>     <chr>     <int>    <dbl>    <dbl>     <dbl>
+ 1 Bacteria SpringP~ Bac_~ full      ASV137553  1044 1.45e-30 5.82e-30    0.172 
+ 2 Bacteria SpringP~ Bac_~ full      ASV68333   1044 1.67e-23 3.33e-23    0.154 
+ 3 Bacteria SpringP~ Bac_~ full      ASV16927   1044 6.50e-20 8.67e-20    0.138 
+ 4 Bacteria SpringP~ Bac_~ full      ASV26933   1044 2.92e-16 2.92e-16    0.120 
+ 5 Bacteria SpringP~ Bac_~ top10     ASV137553  1044 8.29e-25 3.32e-24    0.110 
+ 6 Bacteria SpringP~ Bac_~ top10     ASV68333   1044 1.68e-19 3.36e-19    0.0976
+ 7 Bacteria SpringP~ Bac_~ top10     ASV16927   1044 3.49e-16 4.65e-16    0.0821
+ 8 Bacteria SpringP~ Bac_~ top10     ASV26933   1044 2.27e-14 2.27e-14    0.0723
+ 9 Fungi    SpringP~ Fun_~ full      OTU_3978   1066 9.13e-53 4.57e-52    0.261 
+10 Fungi    SpringP~ Fun_~ full      OTU_3665   1066 3.52e-42 8.79e-42    0.201 
+# i 16 more rows
+# i 3 more variables: delta_AIC <dbl>, delta_BIC <dbl>, spatial_impact <chr>
+# A tibble: 13 x 15
+   Organism Trial     Biomarker panel     pcnm_mode     n n_pcnm_used pcnm_p_lrt
+   <chr>    <chr>     <chr>     <chr>     <chr>     <int>       <dbl>      <dbl>
+ 1 Bacteria SpringPan ASV137553 Bac_Spri~ top10      1044          10   8.29e-25
+ 2 Bacteria SpringPan ASV16927  Bac_Spri~ top10      1044          10   3.49e-16
+ 3 Bacteria SpringPan ASV26933  Bac_Spri~ top10      1044          10   2.27e-14
+ 4 Bacteria SpringPan ASV68333  Bac_Spri~ top10      1044          10   1.68e-19
+ 5 Fungi    SpringPan OTU_3662  Fun_Spri~ top10      1066          10   4.34e-24
+ 6 Fungi    SpringPan OTU_3665  Fun_Spri~ top10      1066          10   2.16e-27
+ 7 Fungi    SpringPan OTU_3978  Fun_Spri~ top10      1066          10   3.31e-41
+ 8 Fungi    SpringPan OTU_4625  Fun_Spri~ top10      1066          10   1.07e-27
+ 9 Fungi    SpringPan OTU_739   Fun_Spri~ top10      1066          10   1.32e-21
+10 Fungi    WinterPan OTU_1241  Fun_Wint~ top10      1087          10   4.61e-59
+11 Fungi    WinterPan OTU_2720  Fun_Wint~ top10      1087          10   1.27e-56
+12 Fungi    WinterPan OTU_2962  Fun_Wint~ top10      1087          10   5.96e-55
+13 Fungi    WinterPan OTU_773   Fun_Wint~ top10      1087          10   3.58e-56
+# i 7 more variables: pcnm_p_adj <dbl>, pcnm_minus_log10_p <dbl>,
+#   pcnm_delta_r2m <dbl>, pcnm_delta_AIC <dbl>, pcnm_delta_BIC <dbl>,
+#   pcnm_sig_fdr05 <lgl>, pcnm_spatial_impact <chr>

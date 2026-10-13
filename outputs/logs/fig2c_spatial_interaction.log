@@ -1,0 +1,12 @@
+Warning message:
+package 'ggsci' was built under R version 4.5.2 
+Warning messages:
+1: In geom_hline(yintercept = seq(1.5, length(y_levels) - 0.5, by = 1),  :
+  Ignoring unknown parameters: `inherit.aes`
+2: In geom_hline(yintercept = seq(1.5, length(y_levels) - 0.5, by = 1),  :
+  Ignoring unknown parameters: `inherit.aes`
+3: In geom_hline(yintercept = seq(1.5, length(y_levels) - 0.5, by = 1),  :
+  Ignoring unknown parameters: `inherit.aes`
+4: In geom_hline(yintercept = seq(1.5, length(y_levels) - 0.5, by = 1),  :
+  Ignoring unknown parameters: `inherit.aes`
+Finished main interaction-only top10 figure in: C:/Users/au747146/OneDrive - Aarhus universitet/Desktop/BMB_AUT_MS/0_Submission/4_NatComm/Manuscript_Figure_Code/outputs/fig2c

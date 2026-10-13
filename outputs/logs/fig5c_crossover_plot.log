@@ -1,0 +1,117 @@
+-- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+v dplyr     1.2.1     v readr     2.2.0
+v forcats   1.0.1     v stringr   1.6.0
+v ggplot2   4.0.2     v tibble    3.3.1
+v lubridate 1.9.5     v tidyr     1.3.2
+v purrr     1.2.1     
+-- Conflicts ------------------------------------------ tidyverse_conflicts() --
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
+i Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+Warning messages:
+1: package 'tidyverse' was built under R version 4.5.3 
+2: package 'ggplot2' was built under R version 4.5.3 
+3: package 'tibble' was built under R version 4.5.3 
+4: package 'tidyr' was built under R version 4.5.3 
+5: package 'readr' was built under R version 4.5.3 
+6: package 'purrr' was built under R version 4.5.3 
+7: package 'dplyr' was built under R version 4.5.3 
+8: package 'stringr' was built under R version 4.5.3 
+9: package 'forcats' was built under R version 4.5.3 
+10: package 'lubridate' was built under R version 4.5.3 
+
+Attaching package: 'cowplot'
+
+The following object is masked from 'package:lubridate':
+
+    stamp
+
+
+Attaching package: 'patchwork'
+
+The following object is masked from 'package:cowplot':
+
+    align_plots
+
+New names:
+* `` -> `...8`
+* `` -> `...9`
+* `` -> `...10`
+* `` -> `...11`
+* `` -> `...12`
+* `` -> `...13`
+* `` -> `...14`
+* `` -> `...15`
+* `` -> `...16`
+* `` -> `...17`
+* `` -> `...18`
+* `` -> `...19`
+# A tibble: 160 x 16
+   Organism Trial Biomarker SNPs  PCNMs term  term_clean term_type pcnm_variable
+   <chr>    <chr> <chr>     <chr> <chr> <chr> <chr>      <chr>     <chr>        
+ 1 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM3        
+ 2 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM3        
+ 3 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM40       
+ 4 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP2~ SNP2T_X_P~ snp_pcnm~ PCNM12       
+ 5 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM5        
+ 6 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM5        
+ 7 Fungi    Spri~ OTU_4625  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM12       
+ 8 Fungi    Spri~ OTU_3665  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM12       
+ 9 Bacteria Spri~ ASV68333  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM5        
+10 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM58       
+11 Fungi    Spri~ OTU_3662  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM12       
+12 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM12       
+13 Bacteria Spri~ ASV68333  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM17       
+14 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM40       
+15 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP2~ SNP2T_X_P~ snp_pcnm~ PCNM1        
+16 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM6        
+17 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM1        
+18 Bacteria Spri~ ASV68333  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM33       
+19 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM40       
+20 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM12       
+21 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM17       
+22 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM5        
+23 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM33       
+24 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP2~ SNP2T_X_P~ snp_pcnm~ PCNM11       
+25 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM12       
+26 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM17       
+27 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM3        
+28 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM19       
+29 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM2        
+30 Bacteria Spri~ ASV68333  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM1        
+31 Fungi    Spri~ OTU_3978  JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM17       
+32 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM2        
+33 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM17       
+34 Fungi    Spri~ OTU_3978  JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM40       
+35 Fungi    Spri~ OTU_3978  JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM17       
+36 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM1        
+37 Fungi    Spri~ OTU_3978  JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM40       
+38 Fungi    Spri~ OTU_3978  JHI-~ PCNM~ SNP1~ SNP1T_X_P~ snp_pcnm~ PCNM5        
+39 Bacteria Spri~ ASV68333  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM12       
+40 Fungi    Spri~ OTU_3978  JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM5        
+41 Fungi    Spri~ OTU_739   JHI-~ PCNM~ SNP2~ SNP2T_X_P~ snp_pcnm~ PCNM2        
+42 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM33       
+43 Bacteria Spri~ ASV137553 JHI-~ PCNM~ SNP2~ SNP2G_X_P~ snp_pcnm~ PCNM17       
+44 Fungi    Wint~ OTU_1241  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM1        
+45 Fungi    Spri~ OTU_3662  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM6        
+46 Bacteria Spri~ ASV16927  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM1        
+47 Fungi    Spri~ OTU_4625  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM58       
+48 Fungi    Wint~ OTU_773   JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM1        
+49 Fungi    Spri~ OTU_3662  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM5        
+50 Fungi    Wint~ OTU_2720  JHI-~ PCNM~ SNP1~ SNP1G_X_P~ snp_pcnm~ PCNM1        
+# i 110 more rows
+# i 7 more variables: snp_variable <chr>, snp_name <chr>, estimate <dbl>,
+#   std.error <dbl>, statistic <dbl>, p.value <dbl>, p_adj_by_term_type <dbl>
+`height` was translated to `width`.
+`geom_smooth()` using formula = 'y ~ x'
+There were 30 warnings (use warnings() to see them)
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
