@@ -1,74 +1,81 @@
-# Manuscript analysis code for Figures 2c, 3b and 5
+# Code accompanying the barley root microbiome manuscript
 
-This reviewer package contains the study-specific R workflows for spatial modulation of host genetic effects on microbial composition, local root-to-bulk host selection, within-genotype dispersion, SNP-associated biomarker occupancy, spatial likelihood-ratio tests, SNP-by-PCNM interactions, and biomarker stability. It implements established statistical methods using existing R packages; it does not introduce a new software tool or statistical algorithm.
+Manuscript: *Spatially variable barley root microbiomes do not imply weak host genetic control at field scale*.
 
-The scope is deliberately limited to Figures 2c, 3b and 5 and the associated sensitivity analyses. This package is not an end-to-end reproduction of all manuscript results. Standard PCoA analyses, biomarker discovery, upstream sequencing processing and GEMMA GWAS are outside this package. GWAS-derived node and edge tables and previously selected PCNM axes are supplied as inputs.
+This repository provides figure analysis and plotting code using established statistical methods. It covers main Figures 1–5, Supplementary Figures S2–S13, Extended Data Figure 1, and supporting table workflows. No dedicated script was located for the field map, experimental layout and weather artwork in Supplementary Figure S1. Final panel assembly, maps and network layout may involve manual editing.
 
-## System requirements
+**This is a code-only release. No experimental datasets, fitted-workspace files, numerical result tables or manuscript images are included. The scripts cannot be tested end to end from this repository alone.** Access to the required input files must be arranged separately with the authors. `required_input_paths.csv` describes literal input paths; dynamically generated paths and upstream saved objects are also required.
 
-R 4.5.1 on Windows 11 x64 was used for the validation reported in `VALIDATION.md`. Other operating systems have not been tested. See `tested_package_versions.csv` for the package versions used during testing. No specialist hardware or GPU is required. Figure 3b converts a large bacterial BIOM table to a dense matrix and temporarily allocates approximately 2.6 GiB for that conversion alone; allow several additional GB for intermediate objects. A desktop with 16 GB RAM is a reasonable recommendation, not a measured minimum.
+## Files
 
-Dependencies: tidyverse, qiime2R, vegan, ggeffects, lme4, lmerTest, patchwork, ggthemes, performance, broom, cowplot and ggsci. Dependencies and their version-specific APIs may affect numerical or graphical reproducibility.
+- `scripts/`: 36 figure modules, extracted from original R/R Markdown sources.
+- `original_sources/`: unmodified source snapshots, including R Markdown notebooks, GEMMA commands and annotation utilities.
+- `figure_code_index.csv` and `FIGURE_MAP.md`: figure numbers, module keys and original working directories.
+- `source_provenance.csv`: original paths and SHA-256 checksums of the archived sources.
+- `dependencies.csv`: packages explicitly loaded by the modules; transitive dependencies must also be installed.
+- `run_figure.R`: optional launcher resolving external input locations and isolating common output operations.
+
+## System requirements and versions
+
+Local representative checks used R 4.5.1 on Windows 11 x64. Other operating systems have not been tested. `local_package_versions.csv` records available local dependency versions; inclusion in that file does not mean every module was executed. `selected_workflow_tested_versions.csv` records the earlier selected-workflow environment. The original notebooks do not specify a complete historical environment lockfile.
+
+The R plotting workflows require no specialist hardware. At least 16 GB RAM is recommended for large microbiome matrices; this is not a measured minimum. Full feature selection and GWAS require more time and memory than panel plotting. Original GEMMA shell workflows require a Unix-compatible shell, GEMMA and PLINK, and appropriate genotype inputs. Those external executables and their versions were not validated in this release. Annotation utilities require Python and the genome/annotation inputs named in their sources; workbook assembly uses Node.js. These auxiliary workflows were archived, not newly executed.
 
 ## Installation
 
-Unzip the package into a writable directory and install the listed dependencies in R:
+Download or clone the repository. In R, inspect the required packages:
 
 ```r
-install.packages(c("tidyverse", "vegan", "ggeffects", "lme4", "lmerTest",
-                   "patchwork", "ggthemes", "performance", "broom", "cowplot", "ggsci"))
+d <- read.csv("dependencies.csv")
+packages <- sort(unique(c(d$package, "jsonlite", "tidyverse", "vegan")))
+packages
+install.packages(setdiff(packages, c("qiime2R", "linkET")))
 install.packages("remotes")
 remotes::install_github("jbisanz/qiime2R")
+remotes::install_github("Hy4m/linkET")
 ```
 
-For matching the tested environment, use the versions recorded in `tested_package_versions.csv`, rather than assuming the newest versions are equivalent. qiime2R is distributed through GitHub. Installation time depends on downloads and whether source compilation is necessary; budget approximately 10–30 minutes on a typical desktop. This is an estimate; installation was not timed because dependencies were already present.
+Some packages may require compatible archived versions or additional build tools. Match the recorded versions when evaluating manuscript correspondence. Installation has not been timed; allow approximately 20–60 minutes on a typical desktop with binary packages and an internet connection, and longer if compilation is needed. This is an estimate, not a benchmark. Install GEMMA/PLINK separately only if running the upstream GWAS workflows.
 
-## Demo
+## Running with the original private inputs
 
-From the package directory:
+The launcher accepts one module key at a time. Listing modules requires only base R and no data:
 
 ```text
-Rscript --vanilla run_selected.R demo
+Rscript --vanilla run_figure.R list
 ```
 
-The demo uses the supplied real genotype-level summary table to regenerate the positive biomarker pool CV ratio plot. Expected outputs are `outputs/fig5d/positive_biomarker_pool_cv_ratio_spring.pdf` and `.png`. Values below one indicate a lower CV for pooled abundance than the median individual-biomarker CV. Allow approximately 5–30 seconds on a typical desktop; see `VALIDATION.md` for local execution results. This demo begins with an existing analysis summary, rather than recomputing host-selection strength from raw microbiome counts.
+For actual analysis, provide the original project folder, retaining its input directory structure. Example in Windows PowerShell from this code folder:
 
-## Full selected workflows
+```powershell
+$env:BMB_DATA_ROOT = "C:/path/to/private/BMB_AUT_MS"
+$env:BMB_OUTPUT_ROOT = "C:/path/to/private/figure_outputs"
+Rscript --vanilla run_figure.R figS2_bacteria_taxonomic_composition --check
+Rscript --vanilla run_figure.R figS2_bacteria_taxonomic_composition
+```
+
+The path check covers literal filenames only. Expected output for that module is `family_composition.pdf`, `notebook_plots.pdf` and `session_info.txt` in the module output folder. Local execution with dependencies already installed took about 10 seconds, including R startup; this is a private-input example, not a bundled demo. No demo dataset is supplied, so no data-independent demo performance claim is made.
+
+Other examples:
 
 ```text
-Rscript --vanilla run_selected.R fig2c
-Rscript --vanilla run_selected.R fig3b
-Rscript --vanilla run_selected.R fig5
-Rscript --vanilla run_selected.R all
+Rscript --vanilla run_figure.R fig2c_spatial_interaction
+Rscript --vanilla run_figure.R figS10_biomass
+Rscript --vanilla run_figure.R fig5d_plot_archived_statistics
 ```
 
-The Figure 5 driver runs occupancy counting before plotting and runs the SNP-by-PCNM model workflow through the crossover plotting script. Each module runs in its own R process so it does not depend on objects in an interactive workspace. Generated results and logs go to `outputs/`. Source data are read from `data/processed/`.
+The optional `BMB_CURATED_ROOT` variable can point to the earlier selected-workflow input package. The launcher recognizes selected legacy paths through `input_aliases.json`. It changes common input/output paths and CSV BOM handling only, preserving analysis statements. Common output filenames are flattened into separate module directories. It is not a sandbox: namespace-qualified or external file operations may bypass its wrappers. Run on a private working copy of the original project. Upstream modules and saved results are not automatically connected into a single pipeline.
 
-| Figure | Main scripts | Analysis |
-|---|---|---|
-| 2c | `scripts/fig2c_spatial_interaction.R` | Host genetic distance × raw XY/PCNM spatial metrics, top-ten selected PCNM axes, interaction confidence intervals and BH classification |
-| 3b; associated outlier sensitivity and distance illustration | `scripts/fig3b_host_selection_dispersion.R` | Six nearest bulk samples, Bray-Curtis distances, genotype dispersion, mixed models and outlier sensitivity |
-| 5a | `scripts/fig5a_occupancy_counts.R`, `scripts/fig5a_occupancy_plot.R`, `scripts/fig5a_network_weights.R` | Occupancy from rarefied counts and weighted SNP–biomarker edges |
-| 5b | `scripts/fig5b_spatial_lrt.R` | Genotype random intercept, full/top-ten PCNM fixed effects, ML model comparison and marginal R² |
-| 5c | `scripts/fig5c_snp_pcnm_models.R`, `scripts/fig5c_crossover_plot.R` | Multilocus SNP-by-PCNM models and allele-specific slopes |
-| 5d | `scripts/fig5d_individual_stability.R`, `scripts/fig5d_pool_stability.R` | Individual biomarker CV, supplied pooled CV summaries, regression and Spearman tests |
+To run the original notebooks directly, use the original project inputs, original working directory recorded in the index, and the required original interactive dependencies. FigS10's executable module contains only the original spring/winter biomass rank-plot blocks (lines 1–57 and 254–286); the complete source, including unrelated field-map calls, is archived unchanged.
 
-The panel map was checked against the Nature Communications submission manuscript on 13 October 2026. A copy of its embedded Figure 5 is provided in `reference_results/` for comparison. Some scripts generate additional supporting plots. Final multipanel Illustrator/Cytoscape composition is manual; these scripts reproduce analysis tables and panel plots, not the final assembled artwork.
+## Manuscript correspondence
 
-## Inputs and use with another dataset
+Original statistical models, filters and figure annotations have been retained. See `VALIDATION.md` for what was checked. Newly archived sources should not be interpreted as a claim that every final manuscript panel has been reproduced or compared pixel by pixel.
 
-Retain the supplied file names and schemas when replacing inputs. Count matrices, rCLR matrices, metadata and genotype matrices have different orientations; use the bundled files as schema examples. Sample IDs, genotype IDs, feature IDs, trial names, SNP names and PCNM names must agree across inputs. Do not substitute differently normalized tables and expect the published values to remain unchanged.
+Fig4 feature-selection runs are stochastic. To reconstruct the manuscript SHAP/LME/GWAS panels, use the original saved feature-selection and GEMMA result objects with the corresponding plotting modules. Re-running discovery can produce different selected features. The original shell output-directory spellings and original prevalence filters have been retained; input organization may require attention before a complete upstream rerun.
 
-The rCLR matrices are exact column subsets of the original processed matrices, containing only biomarkers needed here. No transformation was recomputed after subsetting. PCNM selection and GWAS discovery are upstream inputs. Stability plotting reads supplied pooled host-selection/CV tables; regeneration of those upstream tables is not included. Individual biomarker CVs are recalculated from the supplied count matrices.
+Fig5d has two distinct workflows: `fig5d_individual_stability` / `fig5d_pool_stability` retain original recomputation, while `fig5d_plot_archived_statistics` plots the original prepared data using archived manuscript annotation statistics. The latter requires original result CSVs externally and does not newly recompute the archived Spearman coefficients. Known numerical/annotation discrepancies from the earlier audit have not been silently corrected. Final multipanel composition and some manually placed labels are outside automated reproduction.
 
-`reference_results/` contains previously exported quantitative results for comparison. `originals/` contains the source scripts before packaging adjustments. `provenance.csv` records the source file and packaged-file checksum. `CHANGELOG.md` explains the packaging adjustments. This version retains the original manuscript analysis and annotation behavior. In Figure 5d, rho is calculated with Spearman correlation, while `p_value` and the aggregate displayed P are from the linear-regression slope test. In Figure 5c, annotations are from the full multivariable model, while visual trend lines are separate within-allele linear regressions. These are the original workflows, not revised analyses. See `VALIDATION.md` for the exact reproduction limits.
+## Use with other data
 
-## License and availability
-
-This copy is supplied for editorial and peer-review evaluation. An open-source license for public redistribution has not been selected by the authors. Do not assume that the dependencies' licenses license the authors' analysis scripts. Before a public release, the authors should choose a license and add its full text. No public archive DOI or Code Ocean capsule is specified in this package.
-
-## Figure 2c inputs
-
-The added entry point uses the original `interaction_only_top10_q33.R` workflow. The three RData files under `data/processed/fig2c/` contain the original aligned metadata, sample IDs, genetic/microbial distance objects and PCNM scores required by that script. Large unrelated workspaces are omitted. The selected-model objects are represented by their original terms, preserving the top-ten axis order exactly; no distances or PCNM selection were recomputed during extraction. Pairwise PCNM context uses the original pair-mean PCNM-score calculation.
-
-Run `Rscript --vanilla run_selected.R fig2c`. Results are written to `outputs/fig2c/fig2c_interaction_statistics.csv` and the `main_interaction_only_top10_q33_q67` PDF/PNG. The original script outputs four panels in a two-by-two arrangement; the manuscript places them in one row during final manual assembly. The suffix in the original filename is preserved.
+Follow each source's input schema. Count/rCLR matrices, metadata, genotype distances, PCNM axes and GWAS result objects have different orientations and must have consistent sample, genotype, feature, trial and SNP identifiers. Replace inputs only after checking those assumptions; a different normalization or upstream feature set changes the scientific results. This release provides study-specific analysis code, not a general-purpose application.
