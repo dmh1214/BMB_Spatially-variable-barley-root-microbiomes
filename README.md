@@ -4,7 +4,13 @@ Manuscript: *Spatially variable barley root microbiomes do not imply weak host g
 
 This repository provides figure analysis and plotting code using established statistical methods. It covers main Figures 1–5, Supplementary Figures S2–S13, Extended Data Figure 1, and supporting table workflows. No dedicated script was located for the field map, experimental layout and weather artwork in Supplementary Figure S1. Final panel assembly, maps and network layout may involve manual editing.
 
-**This is a code-only release. No experimental datasets, fitted-workspace files, numerical result tables or manuscript images are included. The scripts cannot be tested end to end from this repository alone.** Access to the required input files must be arranged separately with the authors. `required_input_paths.csv` describes literal input paths; dynamically generated paths and upstream saved objects are also required.
+## Scope of this submission: source code only
+
+**Only source code and accompanying documentation are provided in this release.** Experimental datasets, sample metadata, fitted-workspace objects, archived numerical results, expected-output files and manuscript images are not included. Package/version inventories and figure/path indexes are documentation, not experimental data.
+
+The code describes the study workflows, but it cannot reproduce the manuscript results or provide a runnable scientific demo from this repository alone. Execution requires the original input files and, for some plotting scripts, saved upstream results. `required_input_paths.csv` documents literal input paths; dynamically constructed paths are also present in the sources. This README does not specify a separate data-access arrangement; data availability should be described in the manuscript's Data Availability statement.
+
+All analysis commands below are conditional on having the required external inputs. Listing modules is the only example here that can run without experimental data.
 
 ## Files
 
@@ -37,7 +43,11 @@ remotes::install_github("Hy4m/linkET")
 
 Some packages may require compatible archived versions or additional build tools. Match the recorded versions when evaluating manuscript correspondence. Installation has not been timed; allow approximately 20–60 minutes on a typical desktop with binary packages and an internet connection, and longer if compilation is needed. This is an estimate, not a benchmark. Install GEMMA/PLINK separately only if running the upstream GWAS workflows.
 
-## Running with the original private inputs
+## Demo availability
+
+No real or simulated demo dataset is included. No executable data-based demo or expected-output reference is supplied. Demo runtime is therefore not applicable to this code-only release. The private-input timing below documents a local check and is not a bundled demo benchmark.
+
+## Running with separately supplied inputs
 
 The launcher accepts one module key at a time. Listing modules requires only base R and no data:
 
@@ -54,7 +64,7 @@ Rscript --vanilla run_figure.R figS2_bacteria_taxonomic_composition --check
 Rscript --vanilla run_figure.R figS2_bacteria_taxonomic_composition
 ```
 
-The path check covers literal filenames only. Expected output for that module is `family_composition.pdf`, `notebook_plots.pdf` and `session_info.txt` in the module output folder. Local execution with dependencies already installed took about 10 seconds, including R startup; this is a private-input example, not a bundled demo. No demo dataset is supplied, so no data-independent demo performance claim is made.
+The path check covers literal filenames only. When the required external inputs are present, that module generates `family_composition.pdf`, `notebook_plots.pdf` and `session_info.txt` in the module output folder. Local execution with dependencies already installed took about 10 seconds, including R startup; this is a private-input example, not a bundled demo. These generated files are not distributed with this release.
 
 Other examples:
 
@@ -70,7 +80,7 @@ To run the original notebooks directly, use the original project inputs, origina
 
 ## Manuscript correspondence
 
-Original statistical models, filters and figure annotations have been retained. See `VALIDATION.md` for what was checked. Newly archived sources should not be interpreted as a claim that every final manuscript panel has been reproduced or compared pixel by pixel.
+Original statistical models, filters and analysis logic have been retained. Packaging changes include file-path adaptation, selected notebook-block extraction, explicit input loading in selected workflows, and minor file-reference or graphical-parameter corrections. Unmodified source snapshots are provided in `original_sources/`; the executable modules are not described as comment-only edits. See `VALIDATION.md` for what was checked. Newly archived sources should not be interpreted as a claim that every final manuscript panel has been reproduced or compared pixel by pixel.
 
 Fig4 feature-selection runs are stochastic. To reconstruct the manuscript SHAP/LME/GWAS panels, use the original saved feature-selection and GEMMA result objects with the corresponding plotting modules. Re-running discovery can produce different selected features. The original shell output-directory spellings and original prevalence filters have been retained; input organization may require attention before a complete upstream rerun.
 
