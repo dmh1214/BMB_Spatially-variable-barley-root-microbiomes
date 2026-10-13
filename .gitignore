@@ -1,0 +1,13 @@
+outputs/
+data/
+reference_results/
+*.rds
+*.RDS
+*.Rdata
+*.RData
+*.rdata
+*.biom
+*.qza
+*.qzv
+.Rhistory
+.RData

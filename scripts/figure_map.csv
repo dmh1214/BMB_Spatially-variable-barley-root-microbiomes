@@ -1,0 +1,11 @@
+figure,script,purpose
+Fig. 3b,scripts/fig3b_host_selection_dispersion.R,fig3b_host_selection_dispersion
+Fig. 5,scripts/fig5b_spatial_lrt.R,fig5b_spatial_lrt
+Fig. 5,scripts/fig5c_snp_pcnm_models.R,fig5c_snp_pcnm_models
+Fig. 5,scripts/fig5c_crossover_plot.R,fig5c_crossover_plot
+Fig. 5,scripts/fig5a_occupancy_counts.R,fig5a_occupancy_counts
+Fig. 5,scripts/fig5a_occupancy_plot.R,fig5a_occupancy_plot
+Fig. 5,scripts/fig5a_network_weights.R,fig5a_network_weights
+Fig. 5,scripts/fig5d_individual_stability.R,fig5d_individual_stability
+Fig. 5,scripts/fig5d_pool_stability.R,fig5d_pool_stability
+Fig. 2c,scripts/fig2c_spatial_interaction.R,spatial modulation of host genetic effects
