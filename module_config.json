@@ -1,0 +1,326 @@
+[
+  {
+    "key": "fig1_bacteria_pcoa",
+    "figures": "Fig1a,c; FigS11a,b",
+    "script": "scripts/fig1_bacteria_pcoa.R",
+    "original_source": "original_sources/Bac_Aut/beta.Rmd",
+    "working_directory": "Bac_Aut",
+    "role": "analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig1_fungi_pcoa",
+    "figures": "Fig1b,d; FigS11c,d",
+    "script": "scripts/fig1_fungi_pcoa.R",
+    "original_source": "original_sources/Fun_Aut/beta.Rmd",
+    "working_directory": "Fun_Aut",
+    "role": "analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig2a_bacteria_genotype_space",
+    "figures": "Fig2a; FigS4,S5,S6a; TableS1",
+    "script": "scripts/fig2a_bacteria_genotype_space.R",
+    "original_source": "original_sources/Bac_Aut/SNP.Rmd",
+    "working_directory": "Bac_Aut",
+    "role": "analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig2a_fungi_genotype_space",
+    "figures": "Fig2a; FigS4,S5,S6a; TableS1",
+    "script": "scripts/fig2a_fungi_genotype_space.R",
+    "original_source": "original_sources/Fun_Aut/snp.Rmd",
+    "working_directory": "Fun_Aut",
+    "role": "analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig2b_pcnm_vpa",
+    "figures": "Fig2b; FigS6b",
+    "script": "scripts/fig2b_pcnm_vpa.R",
+    "original_source": "original_sources/10_PCNM_VPA/pcnm_vpa.Rmd",
+    "working_directory": ".",
+    "role": "analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig3a_integrated_root_bulk_soil",
+    "figures": "Fig3a",
+    "script": "scripts/fig3a_integrated_root_bulk_soil.R",
+    "original_source": "original_sources/BMB_bulk/root_bulk_soil_integrated_associations.Rmd",
+    "working_directory": "BMB_bulk",
+    "role": "analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig3a_support_bulk_environment",
+    "figures": "Fig3a; FigS6a",
+    "script": "scripts/fig3a_support_bulk_environment.R",
+    "original_source": "original_sources/BMB_bulk/bulk_comm_cor_with_PCNMs_env.Rmd",
+    "working_directory": "BMB_bulk",
+    "role": "supporting source",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig3a_support_root_bulk",
+    "figures": "Fig3a",
+    "script": "scripts/fig3a_support_root_bulk.R",
+    "original_source": "original_sources/BMB_bulk/comm_cor_root_bulk.Rmd",
+    "working_directory": "BMB_bulk",
+    "role": "supporting source",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_bacteria_feature_selection_spring",
+    "figures": "Fig4a,b; ExtendedDataTable1",
+    "script": "scripts/fig4_bacteria_feature_selection_spring.R",
+    "original_source": "original_sources/Bac_Aut/feature_selection_spring.Rmd",
+    "working_directory": ".",
+    "role": "stochastic analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_bacteria_feature_selection_winter",
+    "figures": "Fig4a,b; ExtendedDataTable1",
+    "script": "scripts/fig4_bacteria_feature_selection_winter.R",
+    "original_source": "original_sources/Bac_Aut/feature_selection_winter.Rmd",
+    "working_directory": ".",
+    "role": "stochastic analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_fungi_feature_selection_spring",
+    "figures": "Fig4d,e; ExtendedDataTable1",
+    "script": "scripts/fig4_fungi_feature_selection_spring.R",
+    "original_source": "original_sources/Fun_Aut/feature_selection_spring.Rmd",
+    "working_directory": ".",
+    "role": "stochastic analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_fungi_feature_selection_winter",
+    "figures": "Fig4d,e; ExtendedDataTable1",
+    "script": "scripts/fig4_fungi_feature_selection_winter.R",
+    "original_source": "original_sources/Fun_Aut/feature_selection_winter.Rmd",
+    "working_directory": ".",
+    "role": "stochastic analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_bacteria_shap_lme_mgwas_panels",
+    "figures": "Fig4b,c",
+    "script": "scripts/fig4_bacteria_shap_lme_mgwas_panels.R",
+    "original_source": "original_sources/Bac_Aut/mGWAS/mGWAS_plot.R",
+    "working_directory": "Bac_Aut/mGWAS",
+    "role": "plot from saved feature-selection/GEMMA results",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_fungi_shap_lme_mgwas_panels",
+    "figures": "Fig4e,f",
+    "script": "scripts/fig4_fungi_shap_lme_mgwas_panels.R",
+    "original_source": "original_sources/Fun_Aut/mGWAS/mGWAS_plot.R",
+    "working_directory": "Fun_Aut/mGWAS",
+    "role": "plot from saved feature-selection/GEMMA results",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_bacteria_mgwas_prepare_spring",
+    "figures": "Fig4c",
+    "script": "scripts/fig4_bacteria_mgwas_prepare_spring.R",
+    "original_source": "original_sources/Bac_Aut/mGWAS_spring.Rmd",
+    "working_directory": "Bac_Aut",
+    "role": "upstream phenotype/genotype preparation",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_bacteria_mgwas_prepare_winter",
+    "figures": "Fig4c",
+    "script": "scripts/fig4_bacteria_mgwas_prepare_winter.R",
+    "original_source": "original_sources/Bac_Aut/mGWAS_winter.Rmd",
+    "working_directory": "Bac_Aut",
+    "role": "upstream phenotype/genotype preparation",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_fungi_mgwas_prepare_spring",
+    "figures": "Fig4f",
+    "script": "scripts/fig4_fungi_mgwas_prepare_spring.R",
+    "original_source": "original_sources/Fun_Aut/mGWAS_spring.Rmd",
+    "working_directory": "Fun_Aut",
+    "role": "upstream phenotype/genotype preparation",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig4_fungi_mgwas_prepare_winter",
+    "figures": "Fig4f",
+    "script": "scripts/fig4_fungi_mgwas_prepare_winter.R",
+    "original_source": "original_sources/Fun_Aut/mGWAS_format.Rmd",
+    "working_directory": "Fun_Aut",
+    "role": "upstream phenotype/genotype preparation",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "figS2_bacteria_taxonomic_composition",
+    "figures": "FigS2",
+    "script": "scripts/figS2_bacteria_taxonomic_composition.R",
+    "original_source": "original_sources/Bac_Aut/taxonomic_composition.R",
+    "working_directory": "Bac_Aut",
+    "role": "analysis",
+    "validation": "private-input runtime completed; rendered final-panel comparison not performed in this release"
+  },
+  {
+    "key": "figS3_fungi_taxonomic_composition",
+    "figures": "FigS3",
+    "script": "scripts/figS3_fungi_taxonomic_composition.R",
+    "original_source": "original_sources/Fun_Aut/taxonomic_composition.R",
+    "working_directory": "Fun_Aut",
+    "role": "analysis",
+    "validation": "private-input runtime completed; rendered final-panel comparison not performed in this release"
+  },
+  {
+    "key": "figS7_spatial_context_regressions",
+    "figures": "FigS7",
+    "script": "scripts/figS7_spatial_context_regressions.R",
+    "original_source": "original_sources/08_compare_xy_pcnm/supp_context_grouped_regressions_slope_top10_q33.R",
+    "working_directory": ".",
+    "role": "analysis",
+    "validation": "private-input runtime completed; rendered final-panel comparison not performed in this release"
+  },
+  {
+    "key": "figS10_biomass",
+    "figures": "FigS10",
+    "script": "scripts/figS10_biomass.R",
+    "original_source": "original_sources/Biomass_heatmap.R",
+    "working_directory": ".",
+    "role": "analysis",
+    "validation": "private-input runtime completed; rendered final-panel comparison not performed in this release"
+  },
+  {
+    "key": "figS12_bulk_biomarker_spatial_pattern",
+    "figures": "FigS12",
+    "script": "scripts/figS12_bulk_biomarker_spatial_pattern.R",
+    "original_source": "original_sources/BMB_bulk/spatial_pattern_SNP_biomarkers.Rmd",
+    "working_directory": ".",
+    "role": "analysis",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "extended_data_fig1_nonsignificant_interactions",
+    "figures": "ExtendedDataFig1",
+    "script": "scripts/extended_data_fig1_nonsignificant_interactions.R",
+    "original_source": "original_sources/04_SNP_PCNM_interactions/plot_SNP_PCNM_nonsig_examples.R",
+    "working_directory": ".",
+    "role": "analysis",
+    "validation": "private-input runtime completed; rendered final-panel comparison not performed in this release"
+  },
+  {
+    "key": "extended_data_table1_biomarker_summary",
+    "figures": "ExtendedDataTable1",
+    "script": "scripts/extended_data_table1_biomarker_summary.R",
+    "original_source": "original_sources/07_Supplementary_biomarker_mGWAS/generate_supplementary_biomarker_mgwas_summary.R",
+    "working_directory": ".",
+    "role": "supporting summary",
+    "validation": "source identified; new full rerun not yet performed"
+  },
+  {
+    "key": "fig2c_spatial_interaction",
+    "figures": "Fig2c",
+    "script": "scripts/fig2c_spatial_interaction.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig2c_spatial_interaction.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "private-input runtime completed; rendered final-panel comparison not performed in this release"
+  },
+  {
+    "key": "fig3b_host_selection_dispersion",
+    "figures": "Fig3b; FigS8,S9",
+    "script": "scripts/fig3b_host_selection_dispersion.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig3b_host_selection_dispersion.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5a_network_weights",
+    "figures": "Fig5",
+    "script": "scripts/fig5a_network_weights.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5a_network_weights.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5a_occupancy_counts",
+    "figures": "Fig5",
+    "script": "scripts/fig5a_occupancy_counts.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5a_occupancy_counts.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5a_occupancy_plot",
+    "figures": "Fig5",
+    "script": "scripts/fig5a_occupancy_plot.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5a_occupancy_plot.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5b_spatial_lrt",
+    "figures": "Fig5b; FigS13",
+    "script": "scripts/fig5b_spatial_lrt.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5b_spatial_lrt.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5c_crossover_plot",
+    "figures": "Fig5",
+    "script": "scripts/fig5c_crossover_plot.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5c_crossover_plot.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5c_snp_pcnm_models",
+    "figures": "Fig5",
+    "script": "scripts/fig5c_snp_pcnm_models.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5c_snp_pcnm_models.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5d_individual_stability",
+    "figures": "Fig5",
+    "script": "scripts/fig5d_individual_stability.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5d_individual_stability.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5d_plot_archived_statistics",
+    "figures": "Fig5",
+    "script": "scripts/fig5d_plot_archived_statistics.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5d_plot_archived_statistics.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  },
+  {
+    "key": "fig5d_pool_stability",
+    "figures": "Fig5",
+    "script": "scripts/fig5d_pool_stability.R",
+    "original_source": "original_sources/0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5d_pool_stability.R",
+    "working_directory": ".",
+    "role": "previously validated selected workflow",
+    "validation": "previous selected-workflow validation"
+  }
+]

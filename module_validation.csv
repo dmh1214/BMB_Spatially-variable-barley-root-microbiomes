@@ -1,0 +1,37 @@
+key,source_statements,runtime_this_release,image_comparison_this_release
+fig1_bacteria_pcoa,unchanged executable source body,not executed in this release,not performed
+fig1_fungi_pcoa,unchanged executable source body,not executed in this release,not performed
+fig2a_bacteria_genotype_space,unchanged executable source body,not executed in this release,not performed
+fig2a_fungi_genotype_space,unchanged executable source body,not executed in this release,not performed
+fig2b_pcnm_vpa,unchanged executable source body,not executed in this release,not performed
+fig3a_integrated_root_bulk_soil,unchanged executable source body,not executed in this release,not performed
+fig3a_support_bulk_environment,unchanged executable source body,not executed in this release,not performed
+fig3a_support_root_bulk,unchanged executable source body,not executed in this release,not performed
+fig4_bacteria_feature_selection_spring,unchanged executable source body,not executed in this release,not performed
+fig4_bacteria_feature_selection_winter,unchanged executable source body,not executed in this release,not performed
+fig4_fungi_feature_selection_spring,unchanged executable source body,not executed in this release,not performed
+fig4_fungi_feature_selection_winter,unchanged executable source body,not executed in this release,not performed
+fig4_bacteria_shap_lme_mgwas_panels,unchanged executable source body,not executed in this release,not performed
+fig4_fungi_shap_lme_mgwas_panels,unchanged executable source body,not executed in this release,not performed
+fig4_bacteria_mgwas_prepare_spring,unchanged executable source body,not executed in this release,not performed
+fig4_bacteria_mgwas_prepare_winter,unchanged executable source body,not executed in this release,not performed
+fig4_fungi_mgwas_prepare_spring,unchanged executable source body,not executed in this release,not performed
+fig4_fungi_mgwas_prepare_winter,unchanged executable source body,not executed in this release,not performed
+figS2_bacteria_taxonomic_composition,unchanged executable source body,completed with private inputs,not performed
+figS3_fungi_taxonomic_composition,unchanged executable source body,completed with private inputs,not performed
+figS7_spatial_context_regressions,unchanged executable source body,completed with private inputs,not performed
+figS10_biomass,unchanged selected blocks,completed with private inputs,not performed
+figS12_bulk_biomarker_spatial_pattern,unchanged executable source body,not executed in this release,not performed
+extended_data_fig1_nonsignificant_interactions,unchanged executable source body,completed with private inputs,not performed
+extended_data_table1_biomarker_summary,unchanged executable source body,not executed in this release,not performed
+fig2c_spatial_interaction,unchanged executable source body,completed with private inputs,not performed
+fig3b_host_selection_dispersion,unchanged executable source body,not executed in this release,not performed
+fig5a_network_weights,unchanged executable source body,not executed in this release,not performed
+fig5a_occupancy_counts,unchanged executable source body,not executed in this release,not performed
+fig5a_occupancy_plot,unchanged executable source body,not executed in this release,not performed
+fig5b_spatial_lrt,unchanged executable source body,not executed in this release,not performed
+fig5c_crossover_plot,unchanged executable source body,not executed in this release,not performed
+fig5c_snp_pcnm_models,unchanged executable source body,not executed in this release,not performed
+fig5d_individual_stability,unchanged executable source body,not executed in this release,not performed
+fig5d_plot_archived_statistics,unchanged executable source body,not executed in this release,not performed
+fig5d_pool_stability,unchanged executable source body,not executed in this release,not performed

@@ -1,0 +1,19 @@
+package,version,status
+tidyverse,2.0.0,available in local validation library
+qiime2R,0.99.6,available in local validation library
+vegan,2.7-2,available in local validation library
+ggeffects,2.3.2,available in local validation library
+lme4,1.1-37,available in local validation library
+lmerTest,3.1-3,available in local validation library
+patchwork,1.3.2,available in local validation library
+ggthemes,5.1.0,available in local validation library
+performance,0.16.0,available in local validation library
+broom,1.0.10,available in local validation library
+cowplot,1.2.0,available in local validation library
+dplyr,1.1.4,available in local validation library
+ggplot2,4.0.0,available in local validation library
+tidyr,1.3.1,available in local validation library
+readr,2.1.5,available in local validation library
+purrr,1.1.0,available in local validation library
+insight,1.4.6,available in local validation library
+ggsci,4.1.0,available in local validation library
