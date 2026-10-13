@@ -1,5 +1,0 @@
-"Community","Trial","n_samples","n_features_before","n_features_after","min_prevalence","min_total_count"
-"Bacteria","SpringPan",1157,140320,1384,0.05,10
-"Bacteria","WinterPan",1175,140320,1487,0.05,10
-"Fungi","SpringPan",1181,5027,393,0.05,10
-"Fungi","WinterPan",1177,5027,413,0.05,10
