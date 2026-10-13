@@ -1,3 +1,7 @@
+# Figures: Fig2c
+# Original source: 0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig2c_spatial_interaction.R
+# Analysis statements retained; input/output locations are handled by run_figure.R.
+
 # Portable entry point for the original Figure 2c analysis.
 args <- commandArgs(trailingOnly=FALSE)
 this <- sub("^--file=", "", grep("^--file=",args,value=TRUE)[1])

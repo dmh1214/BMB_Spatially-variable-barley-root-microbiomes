@@ -1,3 +1,7 @@
+# Figures: Fig5
+# Original source: 0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5d_plot_archived_statistics.R
+# Analysis statements retained; input/output locations are handled by run_figure.R.
+
 # Replot using original manuscript statistics for labels.
 # This is a plotting-only mode; it does not claim to recompute archived rho.
 args <- commandArgs(trailingOnly=FALSE)

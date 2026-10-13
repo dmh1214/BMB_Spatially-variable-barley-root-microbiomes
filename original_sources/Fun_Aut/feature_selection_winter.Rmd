@@ -1,0 +1,486 @@
+---
+title: "Biomarkers"
+output: html_notebook
+---
+#library
+```{r}
+rm(list=ls())
+library(tidyverse)
+library(Boruta)
+library(xgboost)
+library(SHAPforxgboost)
+library(vegan)
+```
+
+```{r}
+winter_fun<- readRDS("1_processed_data/otu_winter.rds") 
+winter_fun_rclr <- readRDS("1_processed_data/otu_winter_rclr.rds")# roubust centriod log transformed dataset
+winter_meta <- readRDS("1_processed_data/meta4snp_winter.rds")
+field_winter <- readRDS("1_processed_data/field_winter.rds")
+field_winter |> colnames()
+field_winter <- field_winter |> select(Plot,S,N,mean_SN) |> 
+  pivot_longer(cols = -c(Plot,mean_SN),names_to = "Side",values_to = "above_ground_biomass") 
+  
+```
+
+## make sure microbiome, snp, biomass merged with each other
+```{r}
+winter_fun_tss <- winter_fun |> t() |> decostand("total")
+
+
+winter_fun_tss_filter <- winter_fun_tss[,colSums(winter_fun_tss>0.0005)>0.05*nrow(winter_fun_tss)] # only include microbes have relative abudance > 0.05% in more than 10% of the samples
+dim(winter_fun_tss_filter);dim(winter_fun_tss)
+
+
+winter_fun_rclr_f <- winter_fun_rclr[,colnames(winter_fun_tss_filter)]
+
+
+meta_field_winter <- winter_meta |> left_join(field_winter)
+
+table(is.na(meta_field_winter$above_ground_biomass)) # check if we have NAs in above ground biomass (mean_SN, average biomass from the South and North of the plot)
+
+meta_field_winter <- meta_field_winter |> filter(!is.na(above_ground_biomass))# remove the samples with NAs in aboveground biomass
+
+## remove samples without snp data/does't have above ground biomass from microbial feature table
+winter_fun_fs_df <- winter_fun_tss_filter[meta_field_winter$sampleid,]
+dim(winter_fun);dim(winter_fun_fs_df)  # check the numer of samples
+
+# 1144 samples were input for model training
+```
+
+# filter microbiome data
+```{r}
+table(rownames(winter_fun_fs_df)==meta_field_winter$sampleid) # make sure they merged
+dataX <- winter_fun_fs_df
+y_var <- meta_field_winter$above_ground_biomass
+```
+# step 1 boruta based on random forest to identify microbes significantly contribute to biomass
+```{r}
+
+set.seed(45)
+boruta_input <- data.frame(dataX, biomass = y_var)
+boruta_result <- Boruta(biomass ~ ., data = boruta_input, doTrace = 1 )
+```
+
+```{r}
+# Extract confirmed important features
+confirmed_feats <- getSelectedAttributes(boruta_result, withTentative = F)
+
+# Subset input data
+dataX_boruta <- dataX[, confirmed_feats]
+dataX_boruta |> dim()
+```
+
+# step 2 xgboost to rank the importance
+## 2.1 get the best  iteration
+```{r}
+# Step 1: Explicitly reassign as a clean data.frame
+dataX_clean <- data.frame(dataX_boruta, check.names = FALSE, check.rows = FALSE)
+
+# Step 2: Force matrix conversion
+dataX_mat <- as.matrix(dataX_clean)
+
+# Step 3: Double check it is a numeric matrix
+stopifnot(is.numeric(dataX_mat))
+
+# Step 4: Create DMatrix
+xgb.data <- xgb.DMatrix(data = dataX_mat, label = y_var)
+
+
+
+params <- list(
+  objective = "reg:squarederror",
+  eta = 0.02,             # Keep low for stability
+  max_depth = 5,          # Reduce tree depth to prevent overfitting
+  gamma = 0.1,             
+  subsample = 0.8,        # Add some regularization by row
+  colsample_bytree = 0.8 # Limit feature sampling to prevent dominance of noisy features
+)
+
+
+# Early Stopping
+cv_model <- xgb.cv(
+  data = xgb.data,
+  params = params,
+  nrounds = 1000,                # Max number of boosting rounds
+  nfold = 5,                     # 5-fold cross-validation
+  early_stopping_rounds = 20,   # Stop if no improvement in 20 rounds
+  verbose = 1,
+  metrics = "rmse"              # Root Mean Square Error for regression
+)
+
+best_nrounds <- cv_model$best_iteration  #get the best_nrounds
+```
+
+# step 2.2 model 
+```{r}
+train_idx <- sample(seq_len(nrow(dataX_mat)), size = 0.8 * nrow(dataX_mat)) # train the model with 80% of the samples, and validate with the rest of 20%
+
+dtrain <- xgb.DMatrix(data = dataX_mat[train_idx, ], label = y_var[train_idx])
+dtest  <- xgb.DMatrix(data = dataX_mat[-train_idx, ], label = y_var[-train_idx])
+
+xgb.model <- xgboost(
+  data = dtrain,
+  params = params,
+  nrounds = best_nrounds,
+  verbose = 0
+)
+
+y_test_pred <- predict(xgb.model, dtest)
+y_test_obs <- y_var[-train_idx]
+
+# External performance
+rmse_test <- sqrt(mean((y_test_obs - y_test_pred)^2))
+rsq_test <- 1 - sum((y_test_obs - y_test_pred)^2) / sum((y_test_obs - mean(y_test_obs))^2)
+mae_test <- mean(abs(y_test_obs - y_test_pred))
+
+cat("TEST SET -- RMSE:", rmse_test, "\nR²:", rsq_test, "\nMAE:", mae_test)
+```
+# shape
+
+```{r}
+# Only use training data for SHAP explanation
+shap <- shap.values(xgb_model = xgb.model, X_train = dataX_mat[train_idx, ])
+shap_long <- shap.prep(shap_contrib = shap$shap_score, X_train = dataX_mat[train_idx, ])
+
+saveRDS(shap_long,"feature_selection/fun.winter.shap.RDS") 
+
+p1 <- shap.plot.summary(data_long = shap_long) +
+  ggtitle("Importance in SHAP")
+
+p1
+```
+# lme 
+
+```{r}
+library(lme4)
+library(broom.mixed)
+library(car)
+library(lmerTest)
+```
+## create input dataset for lme
+```{r}
+### use rclr_data for input 
+dataX_mat
+otu_lme_input_winter <- winter_fun_rclr_f[rownames(winter_fun_rclr_f)%in%rownames(dataX_mat),colnames(winter_fun_rclr_f)%in%colnames(dataX_mat)]
+
+
+lme_input <-otu_lme_input_winter  |> 
+  as.data.frame() |> 
+  rownames_to_column("sampleid") |> 
+  left_join(select(meta_field_winter,sampleid,Col,Row,Entry,above_ground_biomass))
+
+
+
+# create a new data frame to save the results
+lme.results<- data.frame(otu = character(),
+                             Estimate = numeric(),
+                             P_Value = numeric(),
+                             stringsAsFactors = FALSE)
+
+# get the otu list
+otu_cols<- colnames(dataX_mat)
+
+# calculate 
+for (otu in otu_cols) {
+  # fit the model
+ fit <- lmer(above_ground_biomass ~ lme_input[[otu]] + (1 | Entry)+ (1 | Row)+ (1 | Col), data = lme_input)
+  
+  # extract the fixed effect
+  estimate <- fixef(fit)[2]
+  
+  # calculate the p values
+  summary_fit <- summary(fit)
+  p_value <- summary_fit$coefficients[2, "Pr(>|t|)"]
+  
+  # outputdata
+  lme.results<- rbind(lme.results, data.frame(otu = otu, Estimate = estimate, P_Value = p_value))
+}
+
+# results
+lme.results$p_adj <- p.adjust(lme.results$P_Value,method="fdr")
+dim(lme.results)
+table(lme.results$p_adj>0.05)
+```
+## 4.1 shapviz
+```{r}
+## 1 shapviz
+library(shapviz)
+sv <- shapviz(xgb.model, X_pred = dataX_mat[train_idx, ])
+
+shap_mean <- sv %>%
+  get_shap_values() %>%
+  as.data.frame() |> 
+  summarise(across(everything(), ~ mean(abs(.)))) %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "mean_abs_shap") %>%
+  arrange(mean_abs_shap)
+
+
+# SHAP matrix
+shap_mat <- get_shap_values(sv)
+feat_mat <- get_feature_values(sv)
+
+shap_mat_df <- as.data.frame(shap_mat)
+feat_mat_df <- as.data.frame(feat_mat)
+
+shap_dir <- lapply(colnames(shap_mat_df), function(v) {
+  x <- feat_mat_df[[v]]
+  y <- shap_mat_df[[v]]
+  r <- suppressWarnings(cor(x, y, use = "pairwise.complete.obs"))
+  data.frame(variable = v, shap_cor = r)
+}) |> 
+  dplyr::bind_rows()
+```
+## 4.2. Taxonomic labels
+```{r}
+# Read taxa
+  taxa <- readRDS("1_processed_data/taxonomy.rds")
+otu_to_label <- taxa |> 
+  select(otuid,Genus) |> 
+   mutate(label = paste0(Genus, "_", otuid)) %>%
+  select(otuid, label) %>%
+  deframe()
+
+```
+
+## 43. Combine SHAP + LME + Reorder
+```{r}
+# Combine SHAP + LME
+shap_lme <- shap_mean %>%
+  # 加入 SHAP 方向信息
+  left_join(shap_dir, by = "variable") %>%
+  # 再连上 LME 结果
+  left_join(lme.results, by = c("variable" = "otu")) %>%
+  mutate(
+    logP = -log10(p_adj),
+    sig_group = ifelse(p_adj <= 0.05, "Significant", "Non-significant"),
+    slope = ifelse(p_adj <= 0.05, Estimate, 0)
+  ) %>%
+  mutate(sig_group = factor(sig_group, levels = c("Significant", "Non-significant")))
+
+
+shap_lme <- shap_lme %>%
+  mutate(
+    # SHAP 方向（可以设置一个很小的阈值防止极小相关）
+    shap_sign = dplyr::case_when(
+      is.na(shap_cor) ~ NA_character_,
+      shap_cor >  0.05 ~ "Positive",
+      shap_cor < -0.05 ~ "Negative",
+      TRUE             ~ "Ambiguous"
+    ),
+    # LME 方向
+    slope_sign = dplyr::case_when(
+      slope >  0 ~ "Positive",
+      slope <  0 ~ "Negative",
+      slope == 0 ~ "Non-significant",
+      TRUE       ~ NA_character_
+    ),
+    # SHAP 和 LME 是否同号
+    direction_match = dplyr::case_when(
+      slope_sign %in% c("Positive", "Negative") &
+        shap_sign %in% c("Positive", "Negative") &
+        slope_sign == shap_sign ~ "Consistent",
+      slope_sign %in% c("Positive", "Negative") &
+        shap_sign %in% c("Positive", "Negative") &
+        slope_sign != shap_sign ~ "Inconsistent",
+      TRUE ~ "Undefined"
+    )
+  )
+
+# ---- keep only slope != 0
+shap_lme_f <- shap_lme %>%
+  # ① LME 显著
+  filter(slope != 0) %>%
+  # ② SHAP 和 LME 方向一致
+  filter(direction_match == "Consistent") %>%
+  mutate(
+    slope_sign = factor(slope_sign, levels = c("Positive", "Negative"))
+  ) %>%
+  group_by(slope_sign) %>%
+  arrange(desc(mean_abs_shap), .by_group = TRUE) %>%
+  ungroup()
+shap_lme_conflict <- shap_lme %>%
+  filter(slope != 0, direction_match == "Inconsistent")
+dim(shap_lme_conflict)
+
+# final order
+variable_order <- shap_lme_f$variable
+
+shap_lme_f <- shap_lme_f %>%
+  mutate(variable_ranked = factor(variable, levels = variable_order))
+
+# labels follow same order
+otu_to_label_ranked <- otu_to_label[levels(shap_lme_f$variable_ranked)]
+
+
+```
+
+
+```{r}
+library(patchwork)
+library(ggbeeswarm)
+
+
+
+
+# Long format
+shap_long <- shap_mat %>%
+  as.data.frame() %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "shap_value")
+
+feat_long <- feat_mat %>%
+  as.data.frame() %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "feature_value")
+
+# Combine + keep only slope!=0 otus + ranked factor
+shap_long <- shap_long %>%
+  mutate(feature_value = feat_long$feature_value) %>%
+  filter(variable %in% shap_lme_f$variable) %>%
+  left_join(shap_lme_f %>% select(variable, variable_ranked), by = "variable") %>%
+  mutate(variable_ranked = factor(variable_ranked, levels = levels(shap_lme_f$variable_ranked)))
+
+# Clipping after filtering
+lower_clip <- quantile(shap_long$feature_value, 0.01, na.rm = TRUE)
+upper_clip <- quantile(shap_long$feature_value, 0.99, na.rm = TRUE)
+
+shap_long <- shap_long %>%
+  mutate(feature_value_clip = pmax(pmin(feature_value, upper_clip), lower_clip))
+
+# p_shap
+p_shap <- ggplot(shap_lme_f, aes(x = 6 * mean_abs_shap, y = variable_ranked)) +
+  geom_bar(stat = "identity", fill = "grey", alpha = 0.3) +
+  geom_quasirandom(
+    data = shap_long,
+    aes(x = shap_value, y = variable_ranked, color = feature_value_clip),
+    alpha = 0.6, size = 1.5, width = 0.2
+  ) +
+  geom_text(aes(label = round(mean_abs_shap, 3)),
+            hjust = -0.1, size = 3.5) +
+  scale_color_viridis_c(
+    begin = 0.25, end = 0.85, option = "inferno",
+    name = NULL,
+    breaks = c(lower_clip, upper_clip),
+    labels = c("Low", "High"),
+    guide = guide_colorbar(
+      title = NULL,
+      label.position = "bottom",
+      label.hjust = c(0, 1),
+      barwidth = unit(80, "mm"),
+      barheight = unit(2, "mm"),
+      ticks = FALSE
+    )
+  ) +
+  scale_y_discrete(
+    labels = otu_to_label_ranked,
+    limits = rev(levels(shap_lme_f$variable_ranked))  # ⭐ same order
+  ) +
+  labs(title = "SHAP based on XGBoost", y = NULL, x = "SHAP value") +
+  theme_bw(base_size = 13) +
+  theme(legend.position = "bottom")
+
+# p_lme
+p_lme <- ggplot(shap_lme_f, aes(x = "otu", y = variable_ranked)) +
+  geom_point(aes(size = logP, color = slope), alpha = 0.8, shape = 15) +
+  scale_color_gradient2(
+    low = "blue", mid = "grey", high = "firebrick",
+    midpoint = 0,
+    name = "Slope in LME"
+  ) +
+  scale_size_continuous(name = "-log10(p_adj)") +
+  scale_y_discrete(
+    labels = otu_to_label_ranked,
+    limits = rev(levels(shap_lme_f$variable_ranked))  # ⭐ same order
+  ) +
+  labs(x = NULL, y = NULL, title = "LME") +
+  theme_bw(base_size = 13) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(5, 5, 5, 0),
+    legend.position="top"
+  )
+# Combined plot
+combined_plot <- p_shap + p_lme + patchwork::plot_layout(widths = c(9, 1))
+combined_plot
+
+# Save results (use shap_lme or shap_lme_f depending on what you want)
+shap_lme_out <- shap_lme_f %>%
+  left_join(taxa %>% select(otuid, genus), by = c("variable" = "otuid"))
+
+write.csv(shap_lme_out, "feature_selection/fun_winter_output.csv")
+
+ggsave("feature_selection/fun_winter.pdf", combined_plot, width = 8, height = 8, dpi = 300)
+ggsave("feature_selection/fun_winter.png", combined_plot, width = 8, height = 8, dpi = 300)
+
+
+# 基于 LME + SHAP 结果进行分类
+pie_data_lme2 <- shap_lme %>%
+  mutate(
+    lme_shap_group = case_when(
+      slope != 0 & direction_match == "Consistent"   ~ "LME sig + SHAP consistent",
+      slope != 0 & direction_match != "Consistent"   ~ "LME sig, SHAP inconsistent/ambiguous",
+      slope == 0                                     ~ "LME non-significant",
+      TRUE                                           ~ "Other"
+    )
+  ) %>%
+  count(lme_shap_group)   # 相当于 table(...) |> as.data.frame()
+
+pie_data_lme2
+
+p_lme_confirmation2 <- ggplot(pie_data_lme2, aes(x = "", y = n, fill = lme_shap_group)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  theme(legend.position = "top") +
+  geom_text(aes(label = n), position = position_stack(vjust = 0.5), size = 3) +
+  scale_fill_manual(
+    values = c(
+      "LME sig + SHAP consistent"              = "#458A74",  # 绿色：核心 biomarker
+      "LME sig, SHAP inconsistent/ambiguous"   = "red4",  # 棕色：有信号但不稳定
+      "LME non-significant"                    = "#848484"   # 灰色：不显著
+    )
+  )
+
+p_lme_confirmation2
+
+ggsave(
+  "feature_selection/lme_shap_confirmation_pie_winter.pdf",
+  p_lme_confirmation2,
+  width = 3, height = 3, dpi = 300
+)
+ 
+
+ggsave("feature_selection/lme_confirmation_pie_winter.pdf",p_lme_confirmation2,width=2,height=2,dpi=300 )
+
+```
+# extract the biomarkers
+
+```{r}
+biomarkerID <- shap_lme_f$variable
+
+biomarker_ra <- winter_fun_rclr_f |> 
+  as.data.frame() |> 
+  select(all_of(biomarkerID)) |> 
+  t() |> 
+  as.data.frame()
+
+
+biomarker_ra |> dim()
+
+dir.create("mGWAS")
+saveRDS(biomarker_ra,"mGWAS/biomarkers_rclr_winter_fun.rds")
+
+```
+
+# save image
+```{r}
+save.image("feature_selection/winter_biomarker.Rdata")
+```
+
+
+
+# M&M
+
+To identify the microbes that significantly contribute to the barley biomass, a 3-step selection were performed: first, boruta based on were performed , xgboost with shape explainer were performed to indicate their relative importance, and lme model with genotype as random effect were further used to comfirm their contribution to biomass.

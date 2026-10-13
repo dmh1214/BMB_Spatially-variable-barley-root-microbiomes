@@ -1,3 +1,7 @@
+# Figures: Fig5
+# Original source: 0_Submission/4_NatComm/Manuscript_Figure_Code/scripts/fig5a_network_weights.R
+# Analysis statements retained; input/output locations are handled by run_figure.R.
+
 # Prepared for reviewer use; original analysis retained in originals/.
 if (!exists("project_root", inherits=FALSE)) {
 args <- commandArgs(trailingOnly = FALSE)
