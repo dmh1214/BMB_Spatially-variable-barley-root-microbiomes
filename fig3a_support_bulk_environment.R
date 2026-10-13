@@ -1,0 +1,428 @@
+# Figures: Fig3a; FigS6a
+# Original source: BMB_bulk/bulk_comm_cor_with_PCNMs_env.Rmd
+# Analysis statements retained; input/output locations are handled by run_figure.R.
+
+rm(list = ls())
+
+load("../pcnm_VPA.rdata")
+
+library(qiime2R)
+library(tidyverse)
+library(vegan)
+library(linkET)
+
+bac <- read_q2biom("AUT_Bac/bulk_merged_table/feature-table.biom")
+colnames(bac) <- sub("^FL_", "FL", colnames(bac))
+
+fun <- readRDS("AUT_Fun/fun_otu_count_with_bulk.rds") |>
+  t() |>
+  as.data.frame()
+colnames(fun) <- sub("^FL_", "FL", colnames(fun))
+
+meta <- read.csv("../Bac_Aut/0_raw_data/meta_file.csv")
+meta_aut <- meta |>
+  filter(Location == "Austria", Trial != "DivPan")
+
+env <- read.csv("AUS_ENV_20241112.csv")
+
+pcnm_df$sampleid <- as.character(pcnm_df$sampleid)
+
+
+make_bulk_meta <- function(sample_names, meta_aut) {
+  data.frame(sampleid = sample_names) |>
+    filter(str_detect(sampleid, "^bulk_?\\d+$")) |>
+    mutate(
+      bulk_num = as.numeric(str_extract(sampleid, "\\d+$")),
+      Trial = case_when(
+        bulk_num >= 1    & bulk_num <= 600  ~ "WinterPan",
+        bulk_num >= 601  & bulk_num <= 1200 ~ "DivPan",
+        bulk_num >= 1201 & bulk_num <= 1800 ~ "SpringPan",
+        TRUE ~ NA_character_
+      ),
+      Plot = case_when(
+        bulk_num >= 1    & bulk_num <= 600  ~ bulk_num,
+        bulk_num >= 601  & bulk_num <= 1200 ~ bulk_num - 600,
+        bulk_num >= 1201 & bulk_num <= 1800 ~ bulk_num - 1200,
+        TRUE ~ NA_real_
+      ),
+      Entry = "Bulk_Soil"
+    ) |>
+    left_join(
+      meta_aut |>
+        select(Trial, Plot, Col, Row) |>
+        distinct(),
+      by = c("Trial", "Plot")
+    ) |>
+    mutate(
+      Plot = as.character(Plot),
+      Side = NA_character_
+    ) |>
+    select(sampleid, Trial, Entry, Plot, Col, Row, Side)
+}
+
+meta4bulk_bac <- make_bulk_meta(colnames(bac), meta_aut)
+meta4bulk_fun <- make_bulk_meta(colnames(fun), meta_aut)
+
+
+run_bulk_spatial_analysis <- function(comm_mat,
+                                      bulk_meta,
+                                      meta_aut,
+                                      pcnm_df,
+                                      trial,
+                                      selected_pcnm_model = NULL,
+                                      pcnm_plot_source_trial = trial) {
+  
+  # 1. keep bulk samples for one trial
+  bulk_meta_sub <- bulk_meta |>
+    filter(
+      Trial == trial,
+      sampleid %in% colnames(comm_mat)
+    )
+  
+  # 2. subset bulk table
+  bulk_sub <- comm_mat[, colnames(comm_mat) %in% bulk_meta_sub$sampleid, drop = FALSE]
+  
+  bulk_meta_sub <- bulk_meta_sub[
+    match(colnames(bulk_sub), bulk_meta_sub$sampleid),
+    ,
+    drop = FALSE
+  ]
+  
+  stopifnot(all(colnames(bulk_sub) == bulk_meta_sub$sampleid))
+  
+  # rename sampleid to Plot
+  colnames(bulk_sub) <- as.character(bulk_meta_sub$Plot)
+  
+  # aggregate duplicated plots by mean
+  if (any(table(colnames(bulk_sub)) > 1)) {
+    plot_ids <- unique(colnames(bulk_sub))
+    
+    bulk_plot <- sapply(plot_ids, function(p) {
+      cols <- which(colnames(bulk_sub) == p)
+      rowMeans(as.matrix(bulk_sub[, cols, drop = FALSE]))
+    })
+    
+    bulk_plot <- as.matrix(bulk_plot)
+    colnames(bulk_plot) <- plot_ids
+  } else {
+    bulk_plot <- as.matrix(bulk_sub)
+  }
+  
+  # plot-level metadata
+  bulk_meta_plot <- bulk_meta_sub |>
+    mutate(Plot = as.character(Plot)) |>
+    distinct(Plot, .keep_all = TRUE)
+  
+  bulk_meta_plot <- bulk_meta_plot[
+    match(colnames(bulk_plot), bulk_meta_plot$Plot),
+    ,
+    drop = FALSE
+  ]
+  
+  stopifnot(all(colnames(bulk_plot) == bulk_meta_plot$Plot))
+  
+  # 3. build community matrix
+  bulk_comm <- bulk_plot |>
+    t() |>
+    as.data.frame()
+  
+  rownames(bulk_comm) <- colnames(bulk_plot)
+  bulk_comm <- bulk_comm[, colSums(bulk_comm) > 0, drop = FALSE]
+  
+  bulk_hellinger <- decostand(bulk_comm, method = "hellinger")
+  
+  # 4. XY metadata
+  meta_xy <- bulk_meta_plot |>
+    dplyr::select(Plot, Row, Col) |>
+    mutate(
+      Plot = as.character(Plot),
+      Row = as.numeric(Row),
+      Col = as.numeric(Col)
+    )
+  
+  meta_xy <- meta_xy[
+    match(rownames(bulk_hellinger), meta_xy$Plot),
+    ,
+    drop = FALSE
+  ]
+  
+  stopifnot(all(rownames(bulk_hellinger) == meta_xy$Plot))
+  
+  # 5. PCNM plot-level table
+  pcnm_root <- pcnm_df |>
+    inner_join(
+      meta_aut |>
+        filter(Trial == pcnm_plot_source_trial) |>
+        mutate(Plot = as.character(Plot)) |>
+        dplyr::select(sampleid, Plot),
+      by = "sampleid"
+    ) |>
+    filter(Plot %in% bulk_meta_plot$Plot)
+  
+  pcnm_plot <- pcnm_root |>
+    group_by(Plot) |>
+    summarise(across(starts_with("PCNM"), mean), .groups = "drop") |>
+    as.data.frame()
+  
+  rownames(pcnm_plot) <- pcnm_plot$Plot
+  pcnm_plot$Plot <- NULL
+  
+  pcnm_plot <- pcnm_plot[
+    match(rownames(bulk_hellinger), rownames(pcnm_plot)),
+    ,
+    drop = FALSE
+  ]
+  
+  stopifnot(all(rownames(bulk_hellinger) == rownames(pcnm_plot)))
+  
+  pcnm_mat <- pcnm_plot[, grepl("^PCNM", colnames(pcnm_plot)), drop = FALSE]
+  pcnm_mat <- pcnm_mat[, apply(pcnm_mat, 2, var, na.rm = TRUE) > 0, drop = FALSE]
+  
+  stopifnot(all(complete.cases(pcnm_mat)))
+  
+  # 6. XY model
+  mod_xy <- rda(bulk_hellinger ~ Row + Col, data = meta_xy)
+  
+  # 7. full PCNM model
+  mod_pcnm_full <- rda(bulk_hellinger ~ ., data = pcnm_mat)
+  
+  # 8. selected PCNM model
+  if (!is.null(selected_pcnm_model)) {
+    sel_vars <- attr(terms(selected_pcnm_model), "term.labels")
+    sel_vars <- intersect(sel_vars, colnames(pcnm_mat))
+    pcnm_sel_mat <- pcnm_mat[, sel_vars, drop = FALSE]
+    mod_pcnm_sel <- rda(bulk_hellinger ~ ., data = pcnm_sel_mat)
+  } else {
+    pcnm_sel_mat <- NULL
+    mod_pcnm_sel <- NULL
+  }
+  
+  # 9. comparison models
+  pcnm_2 <- pcnm_mat[, 1:min(2, ncol(pcnm_mat)), drop = FALSE]
+  pcnm_10 <- pcnm_mat[, 1:min(10, ncol(pcnm_mat)), drop = FALSE]
+  
+  mod_pcnm2 <- rda(bulk_hellinger ~ ., data = pcnm_2)
+  mod_pcnm10 <- rda(bulk_hellinger ~ ., data = pcnm_10)
+  
+  comparison <- data.frame(
+    model = c("XY", "PCNM_2", "PCNM_10", "PCNM_selected"),
+    R2 = c(
+      RsquareAdj(mod_xy)$r.squared,
+      RsquareAdj(mod_pcnm2)$r.squared,
+      RsquareAdj(mod_pcnm10)$r.squared,
+      if (!is.null(mod_pcnm_sel)) RsquareAdj(mod_pcnm_sel)$r.squared else NA
+    ),
+    adj_R2 = c(
+      RsquareAdj(mod_xy)$adj.r.squared,
+      RsquareAdj(mod_pcnm2)$adj.r.squared,
+      RsquareAdj(mod_pcnm10)$adj.r.squared,
+      if (!is.null(mod_pcnm_sel)) RsquareAdj(mod_pcnm_sel)$adj.r.squared else NA
+    )
+  )
+  
+  list(
+    trial = trial,
+    bulk_meta_plot = bulk_meta_plot,
+    bulk_comm = bulk_comm,
+    bulk_hellinger = bulk_hellinger,
+    meta_xy = meta_xy,
+    pcnm_mat = pcnm_mat,
+    pcnm_sel_mat = pcnm_sel_mat,
+    mod_xy = mod_xy,
+    mod_pcnm_full = mod_pcnm_full,
+    mod_pcnm_sel = mod_pcnm_sel,
+    comparison = comparison
+  )
+}
+
+
+# bacteria
+res_bac_spring <- run_bulk_spatial_analysis(
+  comm_mat = bac,
+  bulk_meta = meta4bulk_bac,
+  meta_aut = meta_aut,
+  pcnm_df = pcnm_df,
+  trial = "SpringPan",
+  selected_pcnm_model = pcnm_sel_spring_bac,
+  pcnm_plot_source_trial = "SpringPan"
+)
+
+res_bac_winter <- run_bulk_spatial_analysis(
+  comm_mat = bac,
+  bulk_meta = meta4bulk_bac,
+  meta_aut = meta_aut,
+  pcnm_df = pcnm_df,
+  trial = "WinterPan",
+  selected_pcnm_model = pcnm_sel_winter_bac,
+  pcnm_plot_source_trial = "SpringPan"
+)
+
+# fungi
+res_fun_spring <- run_bulk_spatial_analysis(
+  comm_mat = fun,
+  bulk_meta = meta4bulk_fun,
+  meta_aut = meta_aut,
+  pcnm_df = pcnm_df,
+  trial = "SpringPan",
+  selected_pcnm_model = pcnm_sel_spring_fun,
+  pcnm_plot_source_trial = "SpringPan"
+)
+
+res_fun_winter <- run_bulk_spatial_analysis(
+  comm_mat = fun,
+  bulk_meta = meta4bulk_fun,
+  meta_aut = meta_aut,
+  pcnm_df = pcnm_df,
+  trial = "WinterPan",
+  selected_pcnm_model = pcnm_sel_winter_fun,
+  pcnm_plot_source_trial = "SpringPan"
+)
+
+
+res_bac_spring$comparison
+res_bac_winter$comparison
+res_fun_spring$comparison
+res_fun_winter$comparison
+
+
+run_soil_mantel_qcorrplot <- function(env,
+                                      trial,
+                                      bulk_hellinger_bac,
+                                      bulk_hellinger_fun,
+                                      env_vars = c("Al", "Ca", "Fe", "K", "Mg", "Mn", "Na",
+                                                   "pH_Wasser", "H.", "KAK", "C.", "N.")) {
+  
+  env_sub <- env |>
+    filter(Trial == trial) |>
+    mutate(Plot = as.character(Plot))
+  
+  common_plots <- Reduce(
+    intersect,
+    list(
+      rownames(bulk_hellinger_bac),
+      rownames(bulk_hellinger_fun),
+      env_sub$Plot
+    )
+  )
+  
+  bulk_bac2 <- bulk_hellinger_bac[common_plots, , drop = FALSE]
+  bulk_fun2 <- bulk_hellinger_fun[common_plots, , drop = FALSE]
+  
+  env_sub2 <- env_sub |>
+    filter(Plot %in% common_plots) |>
+    arrange(match(Plot, common_plots))
+  
+  bulk_bac2 <- bulk_bac2[
+    match(env_sub2$Plot, rownames(bulk_bac2)),
+    ,
+    drop = FALSE
+  ]
+  
+  bulk_fun2 <- bulk_fun2[
+    match(env_sub2$Plot, rownames(bulk_fun2)),
+    ,
+    drop = FALSE
+  ]
+  
+  stopifnot(all(rownames(bulk_bac2) == env_sub2$Plot))
+  stopifnot(all(rownames(bulk_fun2) == env_sub2$Plot))
+  
+ env_var <- env_sub2 |>
+  dplyr::select(all_of(env_vars)) |>
+  dplyr::select(where(is.numeric)) |>
+  dplyr::select(where(~ sd(., na.rm = TRUE) > 0))
+
+rownames(env_var) <- env_sub2$Plot
+
+stopifnot(all(rownames(env_var) == rownames(bulk_bac2)))
+stopifnot(all(rownames(env_var) == rownames(bulk_fun2)))
+
+# remove samples with any NA in environmental variables
+keep <- complete.cases(env_var)
+
+env_var <- env_var[keep, , drop = FALSE]
+bulk_bac2 <- bulk_bac2[keep, , drop = FALSE]
+bulk_fun2 <- bulk_fun2[keep, , drop = FALSE]
+
+# check again
+stopifnot(all(rownames(env_var) == rownames(bulk_bac2)))
+stopifnot(all(rownames(env_var) == rownames(bulk_fun2)))
+  
+  bulk_bac_df <- as.data.frame(bulk_bac2)
+  bulk_fun_df <- as.data.frame(bulk_fun2)
+  
+  colnames(bulk_bac_df) <- paste0("Bac_", colnames(bulk_bac_df))
+  colnames(bulk_fun_df) <- paste0("Fun_", colnames(bulk_fun_df))
+  
+  spec_all <- cbind(bulk_bac_df, bulk_fun_df)
+  
+  n_bac <- ncol(bulk_bac_df)
+  n_fun <- ncol(bulk_fun_df)
+  
+  mantel_res <- mantel_test(
+    spec = spec_all,
+    env = env_var,
+    spec_select = list(
+      Bacteria = 1:n_bac,
+      Fungi = (n_bac + 1):(n_bac + n_fun)
+    ),
+    spec_dist = "bray",
+    env_dist = "euclidean",
+    mantel_fun = "mantel"
+  ) |>
+    mutate(
+      rd = cut(r, breaks = c(-Inf, 0.1, 0.3, Inf),
+               labels = c("< 0.1", "0.1 - 0.3", ">= 0.3")),
+      pd = cut(p, breaks = c(-Inf, 0.01, 0.05, Inf),
+               labels = c("< 0.01", "0.01 - 0.05", ">= 0.05"))
+    )
+  
+  cor_env <- correlate(env_var, method = "spearman")
+  
+  p <- qcorrplot(cor_env, type = "lower", diag = FALSE) +
+    geom_square() +
+    geom_couple(
+      aes(colour = pd, size = rd),
+      data = mantel_res,
+      curvature = nice_curvature()
+    ) +
+    scale_fill_gradient2(low = "#3B9AB2", mid = "white", high = "#F21A00") +
+    scale_size_manual(values = c(0.5, 1, 2)) +
+    scale_colour_manual(values = color_pal(3)) +
+    guides(
+      size = guide_legend(title = "Mantel's r"),
+      colour = guide_legend(title = "Mantel's p"),
+      fill = guide_colorbar(title = "Spearman's r")
+    )
+  
+  list(
+    env_var = env_var,
+    bulk_bac = bulk_bac2,
+    bulk_fun = bulk_fun2,
+    mantel_res = mantel_res,
+    cor_env = cor_env,
+    plot = p
+  )
+}
+
+
+soil_plot_spring <- run_soil_mantel_qcorrplot(
+  env = env,
+  trial = "SpringPan",
+  bulk_hellinger_bac = res_bac_spring$bulk_hellinger,
+  bulk_hellinger_fun = res_fun_spring$bulk_hellinger
+)
+
+soil_plot_spring$plot
+soil_plot_spring$mantel_res
+
+
+soil_plot_winter <- run_soil_mantel_qcorrplot(
+  env = env,
+  trial = "WinterPan",
+  bulk_hellinger_bac = res_bac_winter$bulk_hellinger,
+  bulk_hellinger_fun = res_fun_winter$bulk_hellinger
+)
+
+soil_plot_winter$plot
+soil_plot_winter$mantel_res
